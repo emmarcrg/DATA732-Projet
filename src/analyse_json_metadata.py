@@ -38,7 +38,7 @@ def analyse_kw (data, annee, type) :
     #print(kws_inverted)
     return kws_inverted
     
-def analyse_kw (data, annee, mois, type) :
+def analyse_kw_mois (data, annee, mois, type) :
     #Récupérer les données  type en fonction de l'année
     '''data = le fichier json
     type = kws, loc, per, org etc.
@@ -56,7 +56,7 @@ def analyse_kw (data, annee, mois, type) :
     kws_inverted = {value: key for key, value in kws_elements.items()}
 
     # Afficher le dictionnaire inversé
-    print(kws_inverted)
+    #print(kws_inverted)
     return kws_inverted
 
 def analyse_kw (data, annee, mois, jour, type) :
