@@ -14,13 +14,15 @@ def normaliser_nom(nom):
 
 # Créer un dictionnaire pour stocker les données par mois
 data_by_month = {}
-for mois in range(8, 13):  # Inclure les mois d'août à décembre
-    raw_data = analyse_kw_mois('data/fr.sputniknews.africa--20220630--20230630.json', 2022, mois, 'per')
+for annee, mois in [(2022, m) for m in range(8, 13)] + [(2023, m) for m in range(1, 7)]:  # Ajouter les mois de 2023 jusqu'à juin
+    raw_data = analyse_kw_mois('data/fr.sputniknews.africa--20220630--20230630.json', annee, mois, 'per')
     
-    # Filtrer les clés qui ne contiennent pas 'August' ou 'Président'
+    # Filtrer les clés 
+    # Je sais que c'est pas beau mais au moins c'est fait
     filtered_data = {normaliser_nom(v): k for k, v in raw_data.items() if 'August' not in v 
                      and 'August 12' not in v and 'Président' not in v 
-                     and '© Sputnik' not in v and 'Washington' not in v}
+                     and '© Sputnik' not in v and 'Washington' not in v
+                     and 'Wagner' not in v}
     
     # Agréger les occurrences des noms normalisés
     aggregated_data = {}
@@ -32,7 +34,7 @@ for mois in range(8, 13):  # Inclure les mois d'août à décembre
     
     # Trier les données et ne garder que les 5 plus mentionnées
     sorted_data = dict(sorted(aggregated_data.items(), key=lambda item: item[1], reverse=True)[:5])
-    data_by_month[mois] = sorted_data
+    data_by_month[f"{annee}-{mois:02d}"] = sorted_data
 
 # Convertir les données en DataFrame
 df = pd.DataFrame(data_by_month).fillna(0).T
@@ -51,7 +53,7 @@ print(df.head())
 # Ajouter les titres et les labels
 plt.title('Diagramme en barres empilées des Personnes par Mois')
 plt.xlabel('Mois')
-plt.xticks(rotation=0)
+plt.xticks(rotation=90)
 plt.ylabel('Valeurs')
 
 # Afficher la légende et ajuster la mise en page
