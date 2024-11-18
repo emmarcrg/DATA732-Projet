@@ -30,45 +30,68 @@ def axe_x(fichier_data):
     valeurs_x=mois2022+mois2023
     return valeurs_x, annee2022, annee2023
 
-valeurs_x, annee2022, annee2023=axe_x(fichier_data)
-
 # on récupère la liste des organisations
-def axe_y(fichier_data, annee2022, annee2023):
-    liste_organisations=[]
-    for mois in annee2022 :
-        orgas=analyse_kw_mois(fichier_data, 2022, mois, "org")
-        for nb, orga in orgas.items():
-            liste_organisations.append(orga)
+def occurrences_organisation_par_mois(fichier_data, annee2022, annee2023, valeurs_X):
+    occurrences_par_mois=defaultdict(lambda: defaultdict(int))
 
-    for mois in annee2023 :
-        orgas=analyse_kw_mois(fichier_data, 2023, mois, "org")
-        print(orgas)
-        for nb, orga in orgas.items():
-            liste_organisations.append(orga)
-        
-    print(liste_organisations)
+    for i, mois in enumerate(annee2022):
+        liste_organisations = analyse_kw_mois(fichier_data, 2022, mois, "org")
+        for nb_occurrences, orga in liste_organisations.items():
+            occurrences_par_mois[valeurs_X[i]][orga] += nb_occurrences # valeurs_X[i] correspond à l'indice du mois pour l'année 2022
 
-    # on calcule le nombre d'occurence total pour chaque organisation:
-    occurrences_by_org = defaultdict(int)
+    for i, mois in enumerate(annee2023):
+        print(mois)
+        print(valeurs_X[i+len(annee2022)])
+        liste_organisations = analyse_kw_mois(fichier_data, 2023, mois, "org")
+        for nb_occurrences, orga in liste_organisations.items():
+            occurrences_par_mois[valeurs_X[i+len(annee2022)]][orga] += nb_occurrences #valeurs_X[i+len(annee2022)] correspond à l'indice du mois pour l'année 2023
+    print(tri_organisation_par_mois)
+    return occurrences_par_mois
 
-    # Remplir le dictionnaire avec les sommes des occurrences par organisation
-    for nb, org in liste_organisations.items():
-        occurrences_by_org[org] += nb
-
-    # Afficher le résultat
-    print(occurrences_by_org)
-    
-    return liste_organisations
-
-valeurs_y=axe_y(fichier_data, annee2022, annee2023)
-print(valeurs_y)
+def tri_organisation_par_mois(occurrences_par_mois):
+    # on trie les organisations par ordre décroissant de fréquence par mois
+    for mois, organisations in occurrences_par_mois.items():
+        liste_triee=sorted(organisations.items(), key=lambda x: x[1], reverse=True)
+        occurrences_par_mois[mois]=liste_triee[:10]
+    return occurrences_par_mois
 
 
-fig = go.Figure(data=[go.Scatter(
-    x=[1, 2, 3, 4],
-    y=[10, 11, 12, 13],
-    mode='markers',
-    marker_size=[40, 60, 80, 100])
-])
+def graphique_bubble_chart(valeurs_x, occurrences_par_mois):
+    x_vals=[]
+    y_vals=[]
+    z_vals=[]
 
-#fig.show()
+    for mois, organisations in occurrences_par_mois.items():
+        for org, occurrences in organisations:
+            x_vals.append(mois)
+            y_vals.append(org) 
+            z_vals.append(occurrences)
+
+    # création du graphique bubble chart : taille des bulles = occurences
+    fig = go.Figure(data=[go.Scatter(
+        x=x_vals,
+        y=y_vals,
+        mode='markers',
+        marker=dict(
+            size=z_vals,
+            color=z_vals,
+            colorscale='Viridis',
+            opacity=0.7,
+            line=dict(width=1, color='black')
+        )
+    )])
+
+    # mise en page
+    fig.update_layout(
+        title="Occurrences des Organisations par Mois",
+        xaxis_title="Mois",
+        yaxis_title="Organisations",
+        showlegend=False
+    )
+
+    fig.show()
+
+valeurs_x, annee2022, annee2023=axe_x(fichier_data)
+occurrences=occurrences_organisation_par_mois(fichier_data, annee2022, annee2023, valeurs_x)
+occurrences_par_mois=tri_organisation_par_mois(occurrences)
+graphique_bubble_chart(valeurs_x, occurrences_par_mois)
