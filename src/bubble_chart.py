@@ -48,11 +48,11 @@ def occurrences_organisation_par_mois(fichier_data, annee2022, annee2023, valeur
     print(tri_organisation_par_mois)
     return occurrences_par_mois
 
-def tri_organisation_par_mois(occurrences_par_mois):
+def tri_organisation_par_mois(occurrences_par_mois, taille):
     # on trie les organisations par ordre décroissant de fréquence par mois
     for mois, organisations in occurrences_par_mois.items():
         liste_triee=sorted(organisations.items(), key=lambda x: x[1], reverse=True)
-        occurrences_par_mois[mois]=liste_triee[:10]
+        occurrences_par_mois[mois]=liste_triee[:taille]
     return occurrences_par_mois
 
 
@@ -93,5 +93,5 @@ def graphique_bubble_chart(valeurs_x, occurrences_par_mois):
 
 valeurs_x, annee2022, annee2023=axe_x(fichier_data)
 occurrences=occurrences_organisation_par_mois(fichier_data, annee2022, annee2023, valeurs_x)
-occurrences_par_mois=tri_organisation_par_mois(occurrences)
+occurrences_par_mois=tri_organisation_par_mois(occurrences, 5)
 graphique_bubble_chart(valeurs_x, occurrences_par_mois)
