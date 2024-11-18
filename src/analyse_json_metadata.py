@@ -39,7 +39,7 @@ def analyse_kw_annee (data, annee, type) :
     return kws_inverted
     
 def analyse_kw_mois (data, annee, mois, type) :
-    #Récupérer les données  type en fonction de l'année
+    #Récupérer les données type en fonction de l'année
     '''data = le fichier json
     type = kws, loc, per, org etc.
     annee int de l'année (2022 ou 2023),
@@ -56,7 +56,7 @@ def analyse_kw_mois (data, annee, mois, type) :
     kws_inverted = {value: key for key, value in kws_elements.items()}
 
     # Afficher le dictionnaire inversé
-    print(kws_inverted)
+    #print(kws_inverted)
     return kws_inverted
 
 def analyse_kw_jour (data, annee, mois, jour, type) :
@@ -78,17 +78,17 @@ def analyse_kw_jour (data, annee, mois, jour, type) :
     kws_inverted = {value: key for key, value in kws_elements.items()}
 
     # Afficher le dictionnaire inversé
-    print(kws_inverted)
+    #print(kws_inverted)
     return kws_inverted
     
 ######## TEST 1 : dans le all, fonctionne avec kws et loc
 #analyse_kw('data/fr.sputniknews.africa--20220630--20230630.json', 'loc')
 
 ######## TEST 2 : on rajoute year, fonctionne avec per en 2023 et loc en 2022
-#analyse_kw('data/fr.sputniknews.africa--20220630--20230630.json',2023, 'per')
+#analyse_kw_annee('data/fr.sputniknews.africa--20220630--20230630.json',2023, 'per')
 
 ######## TEST 3 : on rajoute month, fonctionne avec per en 3/2023 et org en 10/2022
-#analyse_kw('data/fr.sputniknews.africa--20220630--20230630.json',2022, 10, 'org')
+#analyse_kw_mois('data/fr.sputniknews.africa--20220630--20230630.json',2022, 10, 'org')
 
 ######## TEST 4 : on rajoute day, fonctionne avec kws le 12/10/2022
-#analyse_kw('data/fr.sputniknews.africa--20220630--20230630.json',2022, 10,12, 'kws')
+#analyse_kw_jour('data/fr.sputniknews.africa--20220630--20230630.json',2022, 10,12, 'kws')

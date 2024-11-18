@@ -1,44 +1,60 @@
-import dash
-from dash import dcc, html
-from dash.dependencies import Input, Output
-import plotly.express as px
+import matplotlib.pyplot as plt
 import pandas as pd
 from analyse_json_metadata import *
 
-# Les données : on veut le nombre de répétition de chacune des personnes en fonction des mois
-analyse_kw_mois('data/fr.sputniknews.africa--20220630--20230630.json', 2023, 2, 'per')
-data = {
-    "Person": ["Alice", "Bob", "Alice", "Bob", "Alice", "Bob"],
-    "Date": ["2024-01-01", "2024-01-01", "2024-01-02", "2024-01-02", "2024-01-03", "2024-01-03"],
-    "Value": [10, 20, 15, 25, 20, 30]
-}
+def normaliser_nom(nom):
+    normalisation = {
+        'Zelensky': 'Volodymyr Zelensky',
+        'Macron': 'Emmanuel Macron',
+        'Président russe': 'Vladimir Poutine',  # Ajouter des normalisations pour d'autres doublons connus
+        'Président': 'Emmanuel Macron',
+        'Poutine': 'Vladimir Poutine'
+    }
+    return normalisation.get(nom, nom)
 
-df = pd.DataFrame(data)
+# Créer un dictionnaire pour stocker les données par mois
+data_by_month = {}
+for mois in range(8, 13):  # Inclure les mois d'août à décembre
+    raw_data = analyse_kw_mois('data/fr.sputniknews.africa--20220630--20230630.json', 2022, mois, 'per')
+    
+    # Filtrer les clés qui ne contiennent pas 'August' ou 'Président'
+    filtered_data = {normaliser_nom(v): k for k, v in raw_data.items() if 'August' not in v 
+                     and 'August 12' not in v and 'Président' not in v 
+                     and '© Sputnik' not in v and 'Washington' not in v}
+    
+    # Agréger les occurrences des noms normalisés
+    aggregated_data = {}
+    for personne, occurrence in filtered_data.items():
+        if personne in aggregated_data:
+            aggregated_data[personne] += occurrence
+        else:
+            aggregated_data[personne] = occurrence
+    
+    # Trier les données et ne garder que les 5 plus mentionnées
+    sorted_data = dict(sorted(aggregated_data.items(), key=lambda item: item[1], reverse=True)[:5])
+    data_by_month[mois] = sorted_data
 
-# Créer une instance Dash
-app = dash.Dash(__name__)
+# Convertir les données en DataFrame
+df = pd.DataFrame(data_by_month).fillna(0).T
 
-# Créer la mise en page de l'application
-app.layout = html.Div([
-    html.H1("Graphique Linéaire Interactif"),
-    dcc.Dropdown(
-        id='person-dropdown',
-        options=[{'label': person, 'value': person} for person in df['Person'].unique()],
-        value=df['Person'].unique()[0]  # Valeur par défaut
-    ),
-    dcc.Graph(id='line-chart')
-])
+# Vérifier que les données sont bien numériques
+print(df.dtypes)
 
-# Créer le callback pour mettre à jour le graphique en fonction de la sélection du menu déroulant
-@app.callback(
-    Output('line-chart', 'figure'),
-    [Input('person-dropdown', 'value')]
-)
-def update_chart(selected_person):
-    filtered_df = df[df['Person'] == selected_person]
-    fig = px.line(filtered_df, x='Date', y='Value', title=f"Évolution de {selected_person}")
-    return fig
+# Convertir toutes les colonnes en type numérique (si nécessaire)
+df = df.apply(pd.to_numeric, errors='coerce').fillna(0)
 
-# Exécuter l'application
-if __name__ == '__main__':
-    app.run_server(debug=True)
+# Créer le diagramme en barres empilées
+ax = df.plot(kind='bar', stacked=True, figsize=(10, 5))
+
+print(df.head())
+
+# Ajouter les titres et les labels
+plt.title('Diagramme en barres empilées des Personnes par Mois')
+plt.xlabel('Mois')
+plt.xticks(rotation=0)
+plt.ylabel('Valeurs')
+
+# Afficher la légende et ajuster la mise en page
+plt.legend(title='Personnes', bbox_to_anchor=(1.05, 1), loc='upper left')
+plt.tight_layout()
+plt.show()
