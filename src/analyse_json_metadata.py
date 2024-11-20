@@ -39,11 +39,14 @@ def analyse_kw_annee (data, annee, type) :
     return kws_inverted
     
 def analyse_kw_mois (data, annee, mois, type) :
-    #Récupérer les données type en fonction de l'année
-    '''data = le fichier json
+    #Récupérer les données  type en fonction de l'année
+    '''
+    data = le fichier json
     type = kws, loc, per, org etc.
     annee int de l'année (2022 ou 2023),
-    mois int du mois 2022 : de 7 à 12 et 2023 : de 1 à 6'''
+    mois int du mois 2022 : de 7 à 12 et 2023 : de 1 à 6
+    Output : { int : "organisation1", int2 : "organisation2"}
+    '''
     
     # Charger le fichier JSON
     with open(data, 'r', encoding='utf-8') as file:
