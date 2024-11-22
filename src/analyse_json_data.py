@@ -1,7 +1,7 @@
 import pandas as pd
 
 data=pd.read_json("data/fr.sputniknews.africa--20220630--20230630.json").get('data')
-print(data.head())
+#print(data.head())
 
 def recuperer_articles_par_date(data, annee, mois, jour):
     """Récupère les articles qui ont été publiés à une date donnée
@@ -16,7 +16,6 @@ def recuperer_articles_par_date(data, annee, mois, jour):
     mois=str(mois)
     jour=str(jour)
     liste_articles_date=data.get(annee, {}).get(mois, {}).get(jour, None)
-    
     return liste_articles_date
 
 def recuperer_noms_articles(liste_articles):
@@ -53,7 +52,7 @@ def recuperer_personnes_par_article(article):
 
 
 ###### TEST ######
-print("\nRécupération des articles du 28 mars 2023")
+'''print("\nRécupération des articles du 28 mars 2023")
 liste_articles=recuperer_articles_par_date(data, "2023", "3", "28")
 print("Nombre d'articles : ", len(liste_articles))
 noms_articles=recuperer_noms_articles(liste_articles)
@@ -65,6 +64,6 @@ for article in liste_articles:
     occurence_personnes=recuperer_occurence_personnes_par_article(article)
     personnes=recuperer_personnes_par_article(article)
     print("Occurence : ", occurence_personnes)
-    print("Personnes : ", personnes)
+    print("Personnes : ", personnes)'''
 
 """On récupère bien les personnes pour chaque article avec le nombre d'occurence dans celui-ci"""
