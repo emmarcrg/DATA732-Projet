@@ -319,15 +319,24 @@ def get_relations(n):
 
 #get_relations(10)
 
-def plot_graph(liens, apparitions, max_node_size):
-    #on ne se concentre que sur les 20 personnes qui reviennent le plus 
+def plot_graph(liens, apparitions, max_node_size, layout):
     G = nx.Graph()
     
     # Ajouter les arêtes et les poids au graphe
     for (person1, person2), weight in liens.items():
         G.add_edge(person1, person2, weight=weight)
 
-    pos = nx.spring_layout(G, k=0.5, iterations=50)
+    # Sélectionner l'algorithme de disposition
+    if layout == 'spring':
+        pos = nx.spring_layout(G, k=0.5, iterations=50)
+    elif layout == 'circular':
+        pos = nx.circular_layout(G)
+    elif layout == 'random':
+        pos = nx.random_layout(G)
+    elif layout == 'kamada_kawai':
+        pos = nx.kamada_kawai_layout(G)
+    else:
+        raise ValueError("Algorithme de disposition non supporté : {}".format(layout))
     
     edge_trace = []
     
@@ -348,20 +357,19 @@ def plot_graph(liens, apparitions, max_node_size):
     node_color = []
     node_size = []
     
-    scale_factor=(1/100)
+    scale_factor = max_node_size / max(apparitions.values())
 
     for node in G.nodes():
         x, y = pos[node]
         node_x.append(x)
         node_y.append(y)
-        appearances = apparitions.get(node, 0) 
+        appearances = apparitions.get(node, 0)
         node_text.append(f"{node} ({appearances} apparitions)")
-        node_color.append('cornflowerblue')
-         #diamètre des noeuds en fonction des apparitions
+        node_color.append(appearances)
+        # Calculer la taille en fonction des apparitions et appliquer la taille maximale
         size = appearances * scale_factor
         node_size.append(size)
 
-    scale_factor = 10
     node_trace = go.Scatter(
         x=node_x,
         y=node_y,
@@ -371,9 +379,18 @@ def plot_graph(liens, apparitions, max_node_size):
         marker=dict(
             color=node_color,
             size=node_size,
-            line=dict(width=2)))
+            colorscale='Viridis',
+            cmin=0,
+            cmax=max(node_color),
+            colorbar=dict(
+                thickness=15,
+                title='Apparitions',
+                xanchor='left',
+                titleside='right'
+            ),
+            line=dict(width=2)
+        ))
     
-
     fig = go.Figure(data=edge_trace + [node_trace],
                     layout=go.Layout(
                         showlegend=False,
@@ -386,4 +403,7 @@ def plot_graph(liens, apparitions, max_node_size):
     #force_atlas_2 : spacialisation
    
 links_count, apparitions = get_relations(20)
-plot_graph(links_count, apparitions, 100)
+plot_graph(links_count, apparitions, 100, 'spring')
+plot_graph(links_count, apparitions, 100, 'circular') #meilleure spacialisation
+plot_graph(links_count, apparitions, 100, 'random')
+plot_graph(links_count, apparitions, 100, 'kamada_kawai')
