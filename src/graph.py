@@ -1,8 +1,10 @@
 from analyse_json_metadata import *
 from itertools import islice
 from analyse_json_data import *
-from collections import defaultdict 
 from itertools import combinations
+import plotly.graph_objs as go
+import networkx as nx
+
 
 def normaliser_nom(nom):
     #Permet d'éviter certaines répétition : ne fonctionne certainement que pour quelques valeurs, il y a certainement des oublis dans la liste
@@ -49,152 +51,198 @@ def get_noms():
 
 #print(get_noms()) => retourne le nom des 20 première personnes les plus citées
 
-# On regarde maintenant qui apparaît le plus avec qui : les différents liens entre les personnes
+# On regarde maintenant qui apparaît le plus avec qui : les différents liens entre les personnes  
 def get_relations():
-    data=pd.read_json("data/fr.sputniknews.africa--20220630--20230630.json").get('data')
-    print(data)
-    pers=get_noms()
-    links_count = defaultdict(int) #type de dictionnaire qui remplie si jamais il n'y a pas de valeurs
-    
-    for year in (2022, 2023):      #C'est pas beau mais on ne prend pas les même mois donc tant pis   
-        if(year==2022):
-            for month in (7,12): 
-                if month==7:
-                    for day in (20,31): 
-                        # Récupérer les articles pour la date actuelle 
-                        articles = recuperer_articles_par_date(data, year, month, day) 
-                        pers_day=[]
-                        for article in articles :
-                            pers_day=recuperer_personnes_par_article(article)
-                        people_in_entry=[]
-                        print(pers_day)
-                        if pers_day is not None:
-                            for person in pers_day :
-                                if person in pers:
-                                    people_in_entry.append(person)
-                    
-                        # Créer toutes les combinaisons possibles de personnes 2 à 2 
-                        for person1, person2 in combinations(people_in_entry, 2): 
-                            links_count[(person1, person2)] += 1 
-                                
-                if month==8 or month==10 or month==12:
-                    for day in (1,31): 
-                        # Récupérer les articles pour la date actuelle 
-                        articles = recuperer_articles_par_date(data, year, month, day) 
-                        pers_day=[]
-                        for article in articles :
-                            pers_day=recuperer_personnes_par_article(article)
-                        people_in_entry=[]
-                        print(pers_day)
-                        if pers_day is not None:
-                            for person in pers_day :
-                                if person in pers:
-                                    people_in_entry.append(person)
-                    
-                        # Créer toutes les combinaisons possibles de personnes 2 à 2 
-                        for person1, person2 in combinations(people_in_entry, 2): 
-                            links_count[(person1, person2)] += 1 
-                                
-                if month==9 or month==11:
-                    for day in (1,30): 
-                        # Récupérer les articles pour la date actuelle 
-                        articles = recuperer_articles_par_date(data, year, month, day) 
-                        pers_day=[]
-                        for article in articles :
-                            pers_day=recuperer_personnes_par_article(article)
-                        people_in_entry=[]
-                        print(pers_day)
-                        if pers_day is not None:
-                            for person in pers_day :
-                                if person in pers:
-                                    people_in_entry.append(person)
-                    
-                        # Créer toutes les combinaisons possibles de personnes 2 à 2 
-                        for person1, person2 in combinations(people_in_entry, 2): 
-                            links_count[(person1, person2)] += 1 
-                                
-        if (year==2023):
-            for month in (1,6): #On ne prend pas en compte le mois de juin : les données se terminent le 
-                if month==1 or month==3 or month==5:
-                    for day in (1,31): 
-                        # Récupérer les articles pour la date actuelle 
-                        articles = recuperer_articles_par_date(data, year, month, day) 
-                        pers_day=[]
-                        for article in articles :
-                            pers_day=recuperer_personnes_par_article(article)
-                        people_in_entry=[]
-                        print(pers_day)
-                        if pers_day is not None:
-                            for person in pers_day :
-                                if person in pers:
-                                    people_in_entry.append(person)
-                    
-                        # Créer toutes les combinaisons possibles de personnes 2 à 2 
-                        for person1, person2 in combinations(people_in_entry, 2): 
-                            links_count[(person1, person2)] += 1 
-                                
-                if month==4:
-                    for day in (1,30): 
-                        # Récupérer les articles pour la date actuelle 
-                        articles = recuperer_articles_par_date(data, year, month, day) 
-                        pers_day=[]
-                        for article in articles :
-                            pers_day=recuperer_personnes_par_article(article)
-                        people_in_entry=[]
-                        print(pers_day)
-                        if pers_day is not None:
-                            for person in pers_day :
-                                if person in pers:
-                                    people_in_entry.append(person)
-                    
-                        # Créer toutes les combinaisons possibles de personnes 2 à 2 
-                        for person1, person2 in combinations(people_in_entry, 2): 
-                            links_count[(person1, person2)] += 1 
-                if month==2:
-                    for day in (1,28): 
-                        # Récupérer les articles pour la date actuelle 
-                        articles = recuperer_articles_par_date(data, year, month, day) 
-                        pers_day=[]
-                        for article in articles :
-                            pers_day=recuperer_personnes_par_article(article)
-                        people_in_entry=[]
-                        print(pers_day)
-                        if pers_day is not None:
-                            for person in pers_day :
-                                if person in pers:
-                                    people_in_entry.append(person)
-                    
-                        # Créer toutes les combinaisons possibles de personnes 2 à 2 
-                        for person1, person2 in combinations(people_in_entry, 2): 
-                            links_count[(person1, person2)] += 1 
-                if month==6:
-                    for day in (1,29): 
-                        # Récupérer les articles pour la date actuelle 
-                        articles = recuperer_articles_par_date(data, year, month, day) 
-                        pers_day=[]
-                        for article in articles :
-                            pers_day=recuperer_personnes_par_article(article)
-                        people_in_entry=[]
-                        print(pers_day)
-                        if pers_day is not None:
-                            for person in pers_day :
-                                if person in pers:
-                                    people_in_entry.append(person)
-                    
-                        # Créer toutes les combinaisons possibles de personnes 2 à 2 
-                        for person1, person2 in combinations(people_in_entry, 2): 
-                            links_count[(person1, person2)] += 1 
-                                
-                                
-    return links_count 
-# Appeler la fonction et obtenir les résultats 
-rel=get_relations() 
-for relation, lien in rel.items() :
-    print(str(relation) + " ont " + str(lien))
-# On met les données sous la bonne forme 
+    data = pd.read_json("data/fr.sputniknews.africa--20220630--20230630.json").get('data')
+    pers = get_noms()
+    links_count = initialiser_dictionnaire_liens()
 
+    for year in (2022, 2023):
+        if year == 2022:
+            for month in (7, 8, 9, 10, 11, 12):
+                days_in_month = range(1, 32) if month in [7, 8, 10, 12] else range(1, 31)
+                for day in days_in_month:
+                    articles = recuperer_articles_par_date(data, year, month, day)
+                    if articles:
+                        people_in_entry = []
+                        for article in articles:
+                            personnes = recuperer_personnes_par_article(article)
+                            if personnes:
+                                people_in_entry.extend([person for person in personnes if person in pers])
+                        for person1, person2 in combinations(people_in_entry, 2):
+                            if person1!=person2:
+                                #On récupère la première personne du tuple 
+                                
+                                links_count[(person1, person2)] += 1
+        elif year == 2023:
+            for month in (1, 2, 3, 4, 5, 6):
+                days_in_month = range(1, 32) if month in [1, 3, 5] else range(1, 30) if month in [4, 6] else range(1, 29)
+                for day in days_in_month:
+                    articles = recuperer_articles_par_date(data, year, month, day)
+                    if articles:
+                        people_in_entry = []
+                        for article in articles:
+                            personnes = recuperer_personnes_par_article(article)
+                            if personnes:
+                                people_in_entry.extend([person for person in personnes if person in pers])
+                        for person1, person2 in combinations(people_in_entry, 2):
+                            if person1!=person2:
+                                pair = tuple(sorted((person1, person2)))
+                                links_count[(person1, person2)] += 1
+                            
+    return links_count
+
+'''rel = get_relations()
+for day, relations in rel.items():
+    print(f"Pour le {day} :")
+    for relation, lien in relations.items():
+        print(f"{relation} ont {lien} liens")
+'''
+def initialiser_dictionnaire_liens():
+    """
+    Initialise un dictionnaire avec toutes les paires uniques de personnes prises deux à deux.
+    Les valeurs sont initialisées à 0.
+    """
+    personnes=get_noms()
+    dictionnaire_liens = {}
+    for personne1, personne2 in combinations(personnes, 2):
+        dictionnaire_liens[(personne1, personne2)] = 0
+        dictionnaire_liens[(personne2, personne1)] = 0
+    return dictionnaire_liens
+
+# On met les données sous la bonne forme 
+#print(initialiser_dictionnaire_liens())
+
+#On compte le nombre de liens pour chacunes des personnes et on l'ajoute à chaque fois
+def get_relations():
+    data = pd.read_json("data/fr.sputniknews.africa--20220630--20230630.json").get('data')
+    pers = get_noms()
+    links_count = initialiser_dictionnaire_liens()
+
+    for year in (2022, 2023):
+        if year == 2022:
+            for month in (7, 8, 9, 10, 11, 12):
+                days_in_month = range(1, 32) if month in [7, 8, 10, 12] else range(1, 31)
+                for day in days_in_month:
+                    articles = recuperer_articles_par_date(data, year, month, day)
+                    if articles:
+                        people_in_entry = []
+                        for article in articles:
+                            personnes = recuperer_personnes_par_article(article)
+                            if personnes:
+                                people_in_entry.extend([person for person in personnes if person in pers])
+                        for person1, person2 in combinations(people_in_entry, 2):
+                            if person1 != person2:
+                                pair = tuple((person1, person2))
+                                links_count[pair] += 1
+                                pair = tuple((person2, person1))
+                                links_count[pair] += 1
+        elif year == 2023:
+            for month in (1, 2, 3, 4, 5, 6):
+                days_in_month = range(1, 32) if month in [1, 3, 5] else range(1, 30) if month in [4, 6] else range(1, 29)
+                for day in days_in_month:
+                    articles = recuperer_articles_par_date(data, year, month, day)
+                    if articles:
+                        people_in_entry = []
+                        for article in articles:
+                            personnes = recuperer_personnes_par_article(article)
+                            if personnes:
+                                people_in_entry.extend([person for person in personnes if person in pers])
+                        for person1, person2 in combinations(people_in_entry, 2):
+                            if person1 != person2:
+                                pair = tuple((person1, person2))
+                                links_count[pair] += 1
+                                pair = tuple((person2, person1))
+                                links_count[pair] += 1
+
+    return links_count
+
+#on retourne l'ensemble des valeurs des liens en fonction des deux personnes
+#print(get_relations())
+
+#on récupère les n premiers liens; nb : on prend en dans relations (pers1, pers2) ET (pers2, pers1)
+def recuperer_liens(n):
+    relations = get_relations()
+    sorted_relations = dict(sorted(relations.items(), key=lambda item: item[1], reverse=True))
+    liens = {}
+
+    elements = list(sorted_relations.items())
+    for i in range(0, min(2 * n, len(elements)), 2):
+        cle, valeur = elements[i]
+        liens[cle] = valeur
+        
+    return liens
+
+#print(recuperer_liens(20))
 '''
 Pour faire des graphes sous python : 
 - plotly Graph object
 - https://plotly.com/python/network-graphs/
 '''
+
+import plotly.graph_objs as go
+import networkx as nx
+
+import plotly.graph_objs as go
+import networkx as nx
+
+def plot_graph_liens(liens):
+    #on ne se concentre que sur les 20 personnes qui reviennent le plus 
+    G = nx.Graph()
+    
+    # Ajouter les arêtes et les poids au graphe
+    for (person1, person2), weight in liens.items():
+        G.add_edge(person1, person2, weight=weight)
+
+    pos = nx.spring_layout(G, k=0.5, iterations=50)
+    
+    edge_trace = []
+    
+    for edge in G.edges(data=True):
+        x0, y0 = pos[edge[0]]
+        x1, y1 = pos[edge[1]]
+        weight = edge[2]['weight']
+        edge_trace.append(go.Scatter(
+            x=[x0, x1, None],
+            y=[y0, y1, None],
+            line=dict(width=weight / 100, color='cornflowerblue'),
+            hoverinfo='none',
+            mode='lines'))
+
+    node_x = []
+    node_y = []
+    node_text = []
+    node_color = []
+
+    for node in G.nodes():
+        x, y = pos[node]
+        node_x.append(x)
+        node_y.append(y)
+        node_text.append(node)
+        node_color.append('cornflowerblue')
+
+    node_trace = go.Scatter(
+        x=node_x,
+        y=node_y,
+        text=node_text,
+        mode='markers+text',
+        hoverinfo='text',
+        marker=dict(
+            color=node_color,
+            size=10,
+            line=dict(width=2)))
+
+    fig = go.Figure(data=edge_trace + [node_trace],
+                    layout=go.Layout(
+                        showlegend=False,
+                        hovermode='closest',
+                        margin=dict(b=0, l=0, r=0, t=0),
+                        xaxis=dict(showgrid=False, zeroline=False),
+                        yaxis=dict(showgrid=False, zeroline=False)))
+
+    fig.show()
+
+
+liens = recuperer_liens(50)
+
+plot_graph(liens)
