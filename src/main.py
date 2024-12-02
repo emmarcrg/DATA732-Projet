@@ -27,7 +27,7 @@ app.layout = html.Div([
         ],
         value="global"  # La vue globale est la valeur par défaut
     ),
-    html.Div(id="graph_container", style={'display': 'flex', 'flex-wrap': 'wrap', 'justify-content': 'center'})
+    html.Div(id="graph_container")
 ])
 
 # Mise à jour de l'affichage selon la sélection
@@ -40,23 +40,20 @@ def update_graph(chart_type):
     
     if chart_type == 'bubble':
         print("Bubble chart sélectionné")
-        return dcc.Graph(figure=figure_bubble, style={'width': '100%', 'max-width': '800px', 'height': '400px'})
+        return dcc.Graph(figure=figure_bubble)
     elif chart_type == 'line':
         print("Line chart sélectionné")
-        return dcc.Graph(figure=figure_line, style={'width': '100%', 'max-width': '800px', 'height': '400px'})
+        return dcc.Graph(figure=figure_line)
     elif chart_type == 'global':
         print("Vue globale sélectionnée")
         # Liste des graphiques à afficher
         graphs = [
-            dcc.Graph(figure=figure_bubble, style={'width': '48%', 'height': '350px', 'margin': '1%'}),
-            dcc.Graph(figure=figure_line, style={'width': '48%', 'height': '350px', 'margin': '1%'})
+            html.Div(dcc.Graph(figure=figure_bubble), style={'margin-bottom': '20px'}),
+            html.Div(dcc.Graph(figure=figure_line))
         ]
 
-        num_graphs = len(graphs)
-        columns = min(num_graphs, 4)  # Nombre maximum de graphiques par ligne (peut être ajusté)
-
-        # Appliquer les styles calculés à chaque graphique lors de la création
-        return html.Div(graphs, style={'display': 'flex', 'flex-wrap': 'wrap', 'justify-content': 'center'})
+        # Retourne la liste de graphiques pour la vue globale
+        return html.Div(graphs, style={'display': 'block'})
     
     return html.Div()  # Valeur par défaut si aucune sélection
 
