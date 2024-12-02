@@ -1,9 +1,11 @@
 from dash import Dash, html, dcc, callback, Output, Input
 import bubble_chart
-import linechart
+import linechart_personnes
+import linechart_mots
 
 print(f"Module bubble_chart : {bubble_chart}")
-print(f"Module linechart : {linechart}")
+print(f"Module linechart des personnes : {linechart_personnes}")
+print(f"Module linechart des mots-clés : {linechart_mots}")
 
 # Lancement de Dash
 app = Dash(__name__)
@@ -12,8 +14,10 @@ app = Dash(__name__)
 print("Préchargement des graphiques...")
 figure_bubble = bubble_chart.afficher_bubblechart()
 print("Bubble chart préchargé")
-figure_line = linechart.afficher_linechart()
-print("Line chart préchargé")
+figure_line_personnes = linechart_personnes.afficher_linechart_personnes()
+print("Line chart des personnes préchargé")
+figure_line_mots = linechart_mots.afficher_linechart_mots()
+print("Line chart des mots-clés préchargé")
 
 # Disposition de l'application
 app.layout = html.Div([
@@ -23,9 +27,10 @@ app.layout = html.Div([
         options=[
             {"label": "Vue globale", "value": "global"},
             {"label": "Bubble Chart", "value": "bubble"},
-            {"label": "Line Chart", "value": "line"}
+            {"label": "Line Chart des personnes", "value": "line_personnes"},
+            {"label": "Line Chart des mots-clés", "value": "line_mots"},
         ],
-        value="global"  # La vue globale est la valeur par défaut
+        value="global"
     ),
     html.Div(id="graph_container")
 ])
@@ -41,15 +46,19 @@ def update_graph(chart_type):
     if chart_type == 'bubble':
         print("Bubble chart sélectionné")
         return dcc.Graph(figure=figure_bubble)
-    elif chart_type == 'line':
-        print("Line chart sélectionné")
-        return dcc.Graph(figure=figure_line)
+    elif chart_type == 'line_personnes':
+        print("Line chart des personnes sélectionné")
+        return dcc.Graph(figure=figure_line_personnes)
+    elif chart_type == "line_mots":
+        print("Line chart des mots-clés sélectionné")
+        return dcc.Graph(figure=figure_line_mots)
     elif chart_type == 'global':
         print("Vue globale sélectionnée")
-        # Liste des graphiques à afficher
+        # Liste des graphiques à afficher pour la vue globale
         graphs = [
             html.Div(dcc.Graph(figure=figure_bubble), style={'margin-bottom': '20px'}),
-            html.Div(dcc.Graph(figure=figure_line))
+            html.Div(dcc.Graph(figure=figure_line_personnes), style={'margin-bottom': '20px'}),
+            html.Div(dcc.Graph(figure=figure_line_mots))
         ]
 
         # Retourne la liste de graphiques pour la vue globale

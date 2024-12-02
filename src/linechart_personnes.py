@@ -13,8 +13,8 @@ def normaliser_nom(nom):
     }
     return normalisation.get(nom, nom)
 
-def afficher_linechart():
-    print("Chargement du linechart en cours")
+def afficher_linechart_personnes():
+    print("Chargement du linechart des personnes en cours")
     
     # Créer un dictionnaire pour stocker les données par mois
     data_by_month = {}
