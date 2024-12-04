@@ -101,12 +101,12 @@ for day, relations in rel.items():
     for relation, lien in relations.items():
         print(f"{relation} ont {lien} liens")
 '''
-def initialiser_dictionnaire_liens(n):
+#def initialiser_dictionnaire_liens(n):
     """
     Initialise un dictionnaire avec toutes les paires uniques de personnes prises deux à deux.
     Les valeurs sont initialisées à 0.
     """
-    personnes=get_noms(n)
+    '''personnes=get_noms(n)
     dictionnaire_liens = {}
     for personne1, personne2 in combinations(personnes, 2):
         dictionnaire_liens[(personne1, personne2)] = 0
@@ -174,7 +174,7 @@ def recuperer_liens(n):
         cle, valeur = elements[i]
         liens[cle] = valeur
         
-    return liens
+    return liens'''
 
 #print(recuperer_liens(20))
 '''
@@ -182,7 +182,7 @@ Pour faire des graphes sous python :
 - plotly Graph object
 - https://plotly.com/python/network-graphs/
 '''
-
+'''
 def plot_graph_liens(liens):
     #on ne se concentre que sur les 20 personnes qui reviennent le plus 
     G = nx.Graph()
@@ -238,7 +238,7 @@ def plot_graph_liens(liens):
                         yaxis=dict(showgrid=False, zeroline=False)))
 
     fig.show()
-
+'''
 
 #liens = recuperer_liens(50)
 #plot_graph_liens(liens)
@@ -331,7 +331,7 @@ def plot_graph(liens, apparitions, max_node_size):
     #pos = nx.forceatlas2_layout(G) => ne fonctionne pas
     # pip install fa2_modified ne fonctionne pas non plus : besoin de travailler sur vs et non vscode
         
-        
+    #force_atlas_2 : spacialisation
     pos = fa2.forceatlas2_networkx_layout(G, pos=None, niter=2000)
     
     # Sélectionner l'algorithme de disposition
@@ -409,7 +409,6 @@ def plot_graph(liens, apparitions, max_node_size):
                         xaxis=dict(showgrid=False, zeroline=False),
                         yaxis=dict(showgrid=False, zeroline=False)))
     fig.show()
-    #force_atlas_2 : spacialisation
 
 links_count, apparitions = get_relations(20)
 plot_graph(links_count, apparitions, 100)
