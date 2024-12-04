@@ -200,8 +200,8 @@ def plot_graph_fa2(liens, apparitions, max_node_size):
                         yaxis=dict(showgrid=False, zeroline=False)))
     fig.show()
 
-links_count, apparitions = get_relations(20)
-plot_graph_fa2(links_count, apparitions, 100)
+'''links_count, apparitions = get_relations(20)
+plot_graph_fa2(links_count, apparitions, 100)'''
 
 def plot_graph_layout(liens, apparitions, layout, max_node_size):
     G = nx.Graph()
@@ -283,9 +283,6 @@ def plot_graph_layout(liens, apparitions, layout, max_node_size):
                         xaxis=dict(showgrid=False, zeroline=False),
                         yaxis=dict(showgrid=False, zeroline=False)))
     fig.show()
-
-
-
 
 plot_graph_layout(links_count, apparitions, 100, 'spring')
 plot_graph_layout(links_count, apparitions, 100, 'circular') #meilleure spacialisation
