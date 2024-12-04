@@ -1,12 +1,9 @@
 from analyse_json_metadata import *
-from itertools import islice
 from analyse_json_data import *
-from itertools import combinations
+from itertools import combinations, islice
 import plotly.graph_objs as go
 import networkx as nx
 import forceatlas2 as fa2
-import random
-import matplotlib as plt
 
 
 def normaliser_nom(nom):
