@@ -55,6 +55,7 @@ def get_noms(n):
 #print(get_noms()) => retourne le nom des 20 première personnes les plus citées
 
 # On regarde maintenant qui apparaît le plus avec qui : les différents liens entre les personnes  
+'''
 def get_relations(n):
     data = pd.read_json("data/fr.sputniknews.africa--20220630--20230630.json").get('data')
     pers = get_noms(n)
@@ -93,7 +94,7 @@ def get_relations(n):
                                 pair = tuple(sorted((person1, person2)))
                                 links_count[(person1, person2)] += 1
                             
-    return links_count
+    return links_count'''
 
 '''rel = get_relations()
 for day, relations in rel.items():
@@ -102,11 +103,12 @@ for day, relations in rel.items():
         print(f"{relation} ont {lien} liens")
 '''
 #def initialiser_dictionnaire_liens(n):
-    """
+"""
     Initialise un dictionnaire avec toutes les paires uniques de personnes prises deux à deux.
     Les valeurs sont initialisées à 0.
     """
-    '''personnes=get_noms(n)
+'''
+personnes=get_noms(n)
     dictionnaire_liens = {}
     for personne1, personne2 in combinations(personnes, 2):
         dictionnaire_liens[(personne1, personne2)] = 0
@@ -178,10 +180,10 @@ def recuperer_liens(n):
 
 #print(recuperer_liens(20))
 '''
-Pour faire des graphes sous python : 
-- plotly Graph object
-- https://plotly.com/python/network-graphs/
-'''
+    Pour faire des graphes sous python : 
+    - plotly Graph object
+    - https://plotly.com/python/network-graphs/
+    '''
 '''
 def plot_graph_liens(liens):
     #on ne se concentre que sur les 20 personnes qui reviennent le plus 
