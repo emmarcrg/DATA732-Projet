@@ -4,6 +4,9 @@ from analyse_json_data import *
 from itertools import combinations
 import plotly.graph_objs as go
 import networkx as nx
+import forceatlas2 as fa2
+import random
+import matplotlib as plt
 
 
 def normaliser_nom(nom):
@@ -180,12 +183,6 @@ Pour faire des graphes sous python :
 - https://plotly.com/python/network-graphs/
 '''
 
-import plotly.graph_objs as go
-import networkx as nx
-
-import plotly.graph_objs as go
-import networkx as nx
-
 def plot_graph_liens(liens):
     #on ne se concentre que sur les 20 personnes qui reviennent le plus 
     G = nx.Graph()
@@ -319,15 +316,26 @@ def get_relations(n):
 
 #get_relations(10)
 
-def plot_graph(liens, apparitions, max_node_size, layout):
+#def plot_graph(liens, apparitions, max_node_size, style):
+def plot_graph(liens, apparitions, max_node_size):
     G = nx.Graph()
     
     # Ajouter les arêtes et les poids au graphe
     for (person1, person2), weight in liens.items():
         G.add_edge(person1, person2, weight=weight)
-
+        
+    # Convertir le graphe en matrice d'adjacence 
+    adjacency_matrix = nx.to_numpy_array(G) 
+    
+    # Utiliser ForceAtlas2 pour la disposition 
+    #pos = nx.forceatlas2_layout(G) => ne fonctionne pas
+    # pip install fa2_modified ne fonctionne pas non plus : besoin de travailler sur vs et non vscode
+        
+        
+    pos = fa2.forceatlas2_networkx_layout(G, pos=None, niter=2000)
+    
     # Sélectionner l'algorithme de disposition
-    if layout == 'spring':
+    '''if layout == 'spring':
         pos = nx.spring_layout(G, k=0.5, iterations=50)
     elif layout == 'circular':
         pos = nx.circular_layout(G)
@@ -336,7 +344,9 @@ def plot_graph(liens, apparitions, max_node_size, layout):
     elif layout == 'kamada_kawai':
         pos = nx.kamada_kawai_layout(G)
     else:
-        raise ValueError("Algorithme de disposition non supporté : {}".format(layout))
+        raise ValueError("Algorithme de disposition non supporté : {}".format(layout))'''
+    
+    
     
     edge_trace = []
     
@@ -398,12 +408,16 @@ def plot_graph(liens, apparitions, max_node_size, layout):
                         margin=dict(b=0, l=0, r=0, t=0),
                         xaxis=dict(showgrid=False, zeroline=False),
                         yaxis=dict(showgrid=False, zeroline=False)))
-
     fig.show()
     #force_atlas_2 : spacialisation
-   
+
 links_count, apparitions = get_relations(20)
+plot_graph(links_count, apparitions, 100)
+
+
+
+'''
 plot_graph(links_count, apparitions, 100, 'spring')
 plot_graph(links_count, apparitions, 100, 'circular') #meilleure spacialisation
 plot_graph(links_count, apparitions, 100, 'random')
-plot_graph(links_count, apparitions, 100, 'kamada_kawai')
+plot_graph(links_count, apparitions, 100, 'kamada_kawai')'''
