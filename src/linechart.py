@@ -8,7 +8,6 @@ def normaliser_nom(nom):
         'Zelensky': 'Volodymyr Zelensky',
         'Macron': 'Emmanuel Macron',
         'Président russe': 'Vladimir Poutine',  # Ajouter des normalisations pour d'autres doublons connus
-        'Président': 'Emmanuel Macron',
         'Poutine': 'Vladimir Poutine'
     }
     return normalisation.get(nom, nom)
