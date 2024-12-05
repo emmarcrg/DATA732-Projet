@@ -23,8 +23,8 @@ def afficher_linechart_mots():
         inverted_data={value: key for key, value in raw_data.items()}
 
         # on trie par fréquence et on garde les 100 qui apparaissent le plus
-        sorted_data = dict(sorted(inverted_data.items(), key=lambda item: item[1], reverse=True)[:100])
-        #print(f"Données triées pour {annee}-{mois:02d} : {sorted_data}")
+        sorted_data = dict(sorted(inverted_data.items(), key=lambda item: item[1], reverse=True)[:30])
+        print(f"Données triées pour {annee}-{mois:02d} : {sorted_data}")
         
         data_by_month[f"{annee}-{mois:02d}"] = sorted_data
 
