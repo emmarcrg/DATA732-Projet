@@ -56,7 +56,7 @@ def analyse_kw_mois (data, annee, mois, type) :
     kws_elements = data["metadata"]["month"][str(annee)][str(mois)][type]
 
     # Inverser le dictionnaire: clé devient valeur, valeur devient clé
-    kws_inverted = {value: key for key, value in kws_elements.items()}
+    kws_inverted = {value: key.lower() for key, value in kws_elements.items()}
 
     # Afficher le dictionnaire inversé
     #print(kws_inverted)
