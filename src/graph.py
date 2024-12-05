@@ -124,6 +124,7 @@ def get_relations(n):
 
 #get_relations(10)
 
+#def plot_graph(liens, apparitions, max_node_size, style):
 def plot_graph_fa2(liens, apparitions, max_node_size):
     G = nx.Graph()
     
@@ -203,7 +204,7 @@ def plot_graph_fa2(liens, apparitions, max_node_size):
 '''links_count, apparitions = get_relations(20)
 plot_graph_fa2(links_count, apparitions, 100)'''
 
-def plot_graph_layout(liens, apparitions, layout, max_node_size):
+def plot_graph_layout(liens, apparitions, max_node_size, layout):
     G = nx.Graph()
     
     # Ajouter les arêtes et les poids au graphe
@@ -221,7 +222,7 @@ def plot_graph_layout(liens, apparitions, layout, max_node_size):
         pos = nx.kamada_kawai_layout(G)
     else:
         raise ValueError("Algorithme de disposition non supporté : {}".format(layout))
-    
+
     edge_trace = []
     
     for edge in G.edges(data=True):
@@ -284,7 +285,9 @@ def plot_graph_layout(liens, apparitions, layout, max_node_size):
                         yaxis=dict(showgrid=False, zeroline=False)))
     fig.show()
 
+
+'''links_count, apparitions = get_relations(20)
 plot_graph_layout(links_count, apparitions, 100, 'spring')
 plot_graph_layout(links_count, apparitions, 100, 'circular') #meilleure spacialisation
 plot_graph_layout(links_count, apparitions, 100, 'random')
-plot_graph_layout(links_count, apparitions, 100, 'kamada_kawai')
+plot_graph_layout(links_count, apparitions, 100, 'kamada_kawai')'''
