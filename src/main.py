@@ -2,10 +2,13 @@ from dash import Dash, html, dcc, callback, Output, Input
 import bubble_chart
 import linechart_personnes
 import linechart_mots
+import graph
+import webbrowser
 
 print(f"Module bubble_chart : {bubble_chart}")
 print(f"Module linechart des personnes : {linechart_personnes}")
 print(f"Module linechart des mots-clés : {linechart_mots}")
+print(f"Module graph relation par personnes : {graph}")
 
 # Lancement de Dash
 app = Dash(__name__)
@@ -18,6 +21,8 @@ figure_line_personnes = linechart_personnes.afficher_linechart_personnes()
 print("Line chart des personnes préchargé")
 figure_line_mots = linechart_mots.afficher_linechart_mots()
 print("Line chart des mots-clés préchargé")
+figure_graph = graph.afficher_graph_relations(20, 100, "circular")
+print("Graph relation par personnes préchargé")
 
 # Disposition de l'application
 app.layout = html.Div([
@@ -29,6 +34,7 @@ app.layout = html.Div([
             {"label": "Bubble Chart", "value": "bubble"},
             {"label": "Line Chart des personnes", "value": "line_personnes"},
             {"label": "Line Chart des mots-clés", "value": "line_mots"},
+            {"label": "Graph relation par personnes", "value": "graph_personnes"},
         ],
         value="global"
     ),
@@ -52,13 +58,17 @@ def update_graph(chart_type):
     elif chart_type == "line_mots":
         print("Line chart des mots-clés sélectionné")
         return dcc.Graph(figure=figure_line_mots)
+    elif chart_type=="graph_personnes":
+        print("Graph relation par personnes sélectionné")
+        return dcc.Graph(figure=figure_graph)
     elif chart_type == 'global':
         print("Vue globale sélectionnée")
         # Liste des graphiques à afficher pour la vue globale
         graphs = [
             html.Div(dcc.Graph(figure=figure_bubble), style={'margin-bottom': '20px'}),
             html.Div(dcc.Graph(figure=figure_line_personnes), style={'margin-bottom': '20px'}),
-            html.Div(dcc.Graph(figure=figure_line_mots))
+            html.Div(dcc.Graph(figure=figure_line_mots), style={'margin-bottom': '20px'}),
+            html.Div(dcc.Graph(figure=figure_graph), style={'margin-bottom': '20px'}),
         ]
 
         # Retourne la liste de graphiques pour la vue globale
@@ -68,4 +78,6 @@ def update_graph(chart_type):
 
 if __name__ == '__main__':
     print("Lancement de l'application Dash DATA732")
+    url="http://127.0.0.1:8051"
+    webbrowser.open(url)
     app.run(debug=True, port=8051)

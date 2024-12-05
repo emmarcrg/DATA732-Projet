@@ -17,14 +17,14 @@ def afficher_linechart_mots():
             print(f"Erreur: Les données de {annee}-{mois:02d} ne sont pas au format attendu.")
             continue
         
-        print(f"Données brutes pour {annee}-{mois:02d} : {raw_data}")
+        #print(f"Données brutes pour {annee}-{mois:02d} : {raw_data}")
 
         # on fait en sorte que le mot soit la clé
         inverted_data={value: key for key, value in raw_data.items()}
 
         # on trie par fréquence et on garde les 100 qui apparaissent le plus
         sorted_data = dict(sorted(inverted_data.items(), key=lambda item: item[1], reverse=True)[:100])
-        print(f"Données triées pour {annee}-{mois:02d} : {sorted_data}")
+        #print(f"Données triées pour {annee}-{mois:02d} : {sorted_data}")
         
         data_by_month[f"{annee}-{mois:02d}"] = sorted_data
 
@@ -33,12 +33,12 @@ def afficher_linechart_mots():
     # coulerus
     unique_colors = plotly.colors.qualitative.Plotly 
     color_map = {colonne: unique_colors[i % len(unique_colors)] for i, colonne in enumerate(df.columns)}
-    print(f"Carte des couleurs : {color_map}")
+    #print(f"Carte des couleurs : {color_map}")
 
     sorted_columns = df.sum().sort_values(ascending=False).index
 
     # diagramme en barres empilées avec Plotly
-    print("Création du diagramme...")
+    #print("Création du diagramme...")
     fig = go.Figure()
     for colonne in sorted_columns:
         fig.add_trace(go.Bar(
@@ -48,7 +48,7 @@ def afficher_linechart_mots():
             marker=dict(color=color_map[colonne])
         ))
 
-    print("Mise à jour de la disposition du graphique...")
+    #print("Mise à jour de la disposition du graphique...")
     fig.update_layout(
         barmode='stack',
         title='Diagramme en barres empilées des Mots-clés par Mois',
@@ -68,8 +68,8 @@ def afficher_linechart_mots():
         width=1000
     )
 
-    print("Affichage du graphique...")
-    fig.show()
+    #print("Affichage du graphique...")
+    #fig.show()
     return fig
 
 afficher_linechart_mots()
