@@ -76,7 +76,7 @@ def graphique_bubble_chart(valeurs_x, occurrences_par_mois):
         height=600,
         width=1000
     )
-    fig.show()
+    #fig.show()
     return fig
 
 def afficher_bubblechart():
@@ -87,4 +87,4 @@ def afficher_bubblechart():
     fig = graphique_bubble_chart(valeurs_x, occurrences_par_mois)
     return fig
 
-afficher_bubblechart()
+#afficher_bubblechart()
