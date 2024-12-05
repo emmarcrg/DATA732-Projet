@@ -137,6 +137,15 @@ def plot_graph_fa2(liens, apparitions, max_node_size):
     # pip install fa2_modified ne fonctionne pas non plus : besoin de travailler sur vs et non vscode
         
     #force_atlas_2 : spacialisation
+    '''
+    Une erreur est présente dans le code de forceatlas2_networkx_layout
+    Pour ce faire, il faut modifier le code qui a été importé (avec l'installation sous pip):
+    modifié : 
+        M = numpy.asarray(networkx.to_numpy_matrix(G)) : to_numpy_matrix n'est plus supporté
+    en : 
+        M = numpy.asarray(networkx.to_numpy_array(G))
+
+    '''
     pos = fa2.forceatlas2_networkx_layout(G, pos=None, niter=2000)
     
     edge_trace = []
