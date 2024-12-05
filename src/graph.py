@@ -1,9 +1,9 @@
 from analyse_json_metadata import *
-from itertools import islice
 from analyse_json_data import *
-from itertools import combinations
+from itertools import combinations, islice
 import plotly.graph_objs as go
 import networkx as nx
+import forceatlas2 as fa2
 
 
 def normaliser_nom(nom):
@@ -52,6 +52,7 @@ def get_noms(n):
 #print(get_noms()) => retourne le nom des 20 première personnes les plus citées
 
 # On regarde maintenant qui apparaît le plus avec qui : les différents liens entre les personnes  
+'''
 def get_relations(n):
     data = pd.read_json("data/fr.sputniknews.africa--20220630--20230630.json").get('data')
     pers = get_noms(n)
@@ -90,7 +91,7 @@ def get_relations(n):
                                 pair = tuple(sorted((person1, person2)))
                                 links_count[(person1, person2)] += 1
                             
-    return links_count
+    return links_count'''
 
 '''rel = get_relations()
 for day, relations in rel.items():
@@ -98,12 +99,13 @@ for day, relations in rel.items():
     for relation, lien in relations.items():
         print(f"{relation} ont {lien} liens")
 '''
-def initialiser_dictionnaire_liens(n):
-    """
+#def initialiser_dictionnaire_liens(n):
+"""
     Initialise un dictionnaire avec toutes les paires uniques de personnes prises deux à deux.
     Les valeurs sont initialisées à 0.
     """
-    personnes=get_noms(n)
+'''
+personnes=get_noms(n)
     dictionnaire_liens = {}
     for personne1, personne2 in combinations(personnes, 2):
         dictionnaire_liens[(personne1, personne2)] = 0
@@ -171,21 +173,15 @@ def recuperer_liens(n):
         cle, valeur = elements[i]
         liens[cle] = valeur
         
-    return liens
+    return liens'''
 
 #print(recuperer_liens(20))
 '''
-Pour faire des graphes sous python : 
-- plotly Graph object
-- https://plotly.com/python/network-graphs/
+    Pour faire des graphes sous python : 
+    - plotly Graph object
+    - https://plotly.com/python/network-graphs/
+    '''
 '''
-
-import plotly.graph_objs as go
-import networkx as nx
-
-import plotly.graph_objs as go
-import networkx as nx
-
 def plot_graph_liens(liens):
     #on ne se concentre que sur les 20 personnes qui reviennent le plus 
     G = nx.Graph()
@@ -241,7 +237,7 @@ def plot_graph_liens(liens):
                         yaxis=dict(showgrid=False, zeroline=False)))
 
     fig.show()
-
+'''
 
 #liens = recuperer_liens(50)
 #plot_graph_liens(liens)
@@ -319,15 +315,26 @@ def get_relations(n):
 
 #get_relations(10)
 
-def plot_graph(liens, apparitions, max_node_size, layout):
+#def plot_graph(liens, apparitions, max_node_size, style):
+def plot_graph(liens, apparitions, max_node_size):
     G = nx.Graph()
     
     # Ajouter les arêtes et les poids au graphe
     for (person1, person2), weight in liens.items():
         G.add_edge(person1, person2, weight=weight)
-
+        
+    # Convertir le graphe en matrice d'adjacence 
+    adjacency_matrix = nx.to_numpy_array(G) 
+    
+    # Utiliser ForceAtlas2 pour la disposition 
+    #pos = nx.forceatlas2_layout(G) => ne fonctionne pas
+    # pip install fa2_modified ne fonctionne pas non plus : besoin de travailler sur vs et non vscode
+        
+    #force_atlas_2 : spacialisation
+    pos = fa2.forceatlas2_networkx_layout(G, pos=None, niter=2000)
+    
     # Sélectionner l'algorithme de disposition
-    if layout == 'spring':
+    '''if layout == 'spring':
         pos = nx.spring_layout(G, k=0.5, iterations=50)
     elif layout == 'circular':
         pos = nx.circular_layout(G)
@@ -336,7 +343,9 @@ def plot_graph(liens, apparitions, max_node_size, layout):
     elif layout == 'kamada_kawai':
         pos = nx.kamada_kawai_layout(G)
     else:
-        raise ValueError("Algorithme de disposition non supporté : {}".format(layout))
+        raise ValueError("Algorithme de disposition non supporté : {}".format(layout))'''
+    
+    
     
     edge_trace = []
     
@@ -398,12 +407,15 @@ def plot_graph(liens, apparitions, max_node_size, layout):
                         margin=dict(b=0, l=0, r=0, t=0),
                         xaxis=dict(showgrid=False, zeroline=False),
                         yaxis=dict(showgrid=False, zeroline=False)))
-
     fig.show()
-    #force_atlas_2 : spacialisation
-   
+
 links_count, apparitions = get_relations(20)
+plot_graph(links_count, apparitions, 100)
+
+
+
+'''
 plot_graph(links_count, apparitions, 100, 'spring')
 plot_graph(links_count, apparitions, 100, 'circular') #meilleure spacialisation
 plot_graph(links_count, apparitions, 100, 'random')
-plot_graph(links_count, apparitions, 100, 'kamada_kawai')
+plot_graph(links_count, apparitions, 100, 'kamada_kawai')'''
