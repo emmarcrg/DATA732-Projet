@@ -5,10 +5,6 @@ import linechart_mots
 import graph
 import webbrowser
 
-print(f"Module bubble_chart : {bubble_chart}")
-print(f"Module linechart des personnes : {linechart_personnes}")
-print(f"Module linechart des mots-clés : {linechart_mots}")
-print(f"Module graph relation par personnes : {graph}")
 
 # Lancement de Dash
 app = Dash(__name__)

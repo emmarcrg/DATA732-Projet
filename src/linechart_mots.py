@@ -28,7 +28,14 @@ def afficher_linechart_mots():
 
         # on fait en sorte que le mot soit la clé
         inverted_data={value: key for key, value in raw_data.items()}
-        data_normalisee={normaliser_nom(v):k for v, k in inverted_data.items()}
+
+        # normalisation :
+        data_normalisee={}
+
+        for v, k in inverted_data.items():
+            nom_normalise=normaliser_nom(v)
+            data_normalisee[nom_normalise]=data_normalisee.get(nom_normalise, 0)+k
+        
 
         # on trie par fréquence et on garde les 100 qui apparaissent le plus
         sorted_data = dict(sorted(data_normalisee.items(), key=lambda item: item[1], reverse=True)[:100])
@@ -77,7 +84,7 @@ def afficher_linechart_mots():
     )
 
     #print("Affichage du graphique...")
-    fig.show()
+    #fig.show()
     return fig
 
 afficher_linechart_mots()
