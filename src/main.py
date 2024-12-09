@@ -59,17 +59,32 @@ def update_graph(chart_type):
         return dcc.Graph(figure=figure_graph)
     elif chart_type == 'global':
         print("Vue globale sélectionnée")
+
+        for fig in [figure_bubble, figure_line_personnes, figure_line_mots, figure_graph]:
+            fig.update_layout(
+                width=500, 
+                height=300,
+                margin=dict(l=10, r=10, t=10, b=10), # marges
+                title_font_size=10
+            )
+
         # Liste des graphiques à afficher pour la vue globale
         graphs = [
-            html.Div(dcc.Graph(figure=figure_bubble), style={'margin-bottom': '20px'}),
-            html.Div(dcc.Graph(figure=figure_line_personnes), style={'margin-bottom': '20px'}),
-            html.Div(dcc.Graph(figure=figure_line_mots), style={'margin-bottom': '20px'}),
-            html.Div(dcc.Graph(figure=figure_graph), style={'margin-bottom': '20px'}),
+            html.Div(dcc.Graph(figure=figure_bubble, style={'width': '100%', 'height': '100%'}), style={'width': '500px', 'height': '300px', 'margin-bottom': '10px'}),
+            html.Div(dcc.Graph(figure=figure_line_personnes, style={'width': '100%', 'height': '100%'}), style={'width': '500px', 'height': '300px', 'margin-bottom': '10px'}),
+            html.Div(dcc.Graph(figure=figure_line_mots, style={'width': '100%', 'height': '100%'}), style={'width': '500px', 'height': '300px', 'margin-bottom': '10px'}),
+            html.Div(dcc.Graph(figure=figure_graph, style={'width': '100%', 'height': '100%'}), style={'width': '500px', 'height': '300px', 'margin-bottom': '10px'}),
         ]
 
         # Retourne la liste de graphiques pour la vue globale
-        return html.Div(graphs, style={'display': 'block'})
-    
+        return html.Div(
+            [
+                html.Div(graphs[:2], style={'display': 'flex', 'gap': '10px', 'width': '100%'}),  # Réduire la marge entre les graphiques
+        html.Div(graphs[2:], style={'display': 'flex', 'gap': '10px', 'width': '100%', 'margin-top': '20px'})  # Réduire la marge entre les graphiques
+            ],
+            style={'display': 'flex', 'flex-direction': 'column', 'align-items': 'center'}
+        )
+            
     return html.Div()  # Valeur par défaut si aucune sélection
 
 if __name__ == '__main__':

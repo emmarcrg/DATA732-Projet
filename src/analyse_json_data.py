@@ -11,7 +11,7 @@ def recuperer_articles_par_date(data, annee, mois, jour):
             - annee : un nombre 
             - mois : un nombre sans le 0 devant (ex : janvier=1, fevrier=2...)
             - jour : un nombre sans le 0 devant
-    Output : une liste de nom d'articles"""
+    Output : une liste d'articles"""
     annee=str(annee)
     mois=str(mois)
     jour=str(jour)
@@ -36,6 +36,7 @@ def recuperer_occurence_personnes_par_article(article):
         return liste_personnes
     else :
         return None
+    
 def recuperer_personnes_par_article(article):
     """Récupère les personnes citées dans l'article donné sous forme de liste"""
     liste_personnes=article.get('per', None)
@@ -52,7 +53,8 @@ def recuperer_personnes_par_article(article):
 
 
 ###### TEST ######
-'''print("\nRécupération des articles du 28 mars 2023")
+'''
+print("\nRécupération des articles du 28 mars 2023")
 liste_articles=recuperer_articles_par_date(data, "2023", "3", "28")
 print("Nombre d'articles : ", len(liste_articles))
 noms_articles=recuperer_noms_articles(liste_articles)
@@ -64,6 +66,7 @@ for article in liste_articles:
     occurence_personnes=recuperer_occurence_personnes_par_article(article)
     personnes=recuperer_personnes_par_article(article)
     print("Occurence : ", occurence_personnes)
-    print("Personnes : ", personnes)'''
+    print("Personnes : ", personnes)
 
 """On récupère bien les personnes pour chaque article avec le nombre d'occurence dans celui-ci"""
+'''

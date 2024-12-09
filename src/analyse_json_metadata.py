@@ -94,4 +94,4 @@ def analyse_kw_jour (data, annee, mois, jour, type) :
 #analyse_kw_mois('data/fr.sputniknews.africa--20220630--20230630.json',2022, 10, 'org')
 
 ######## TEST 4 : on rajoute day, fonctionne avec kws le 12/10/2022
-#analyse_kw_jour('data/fr.sputniknews.africa--20220630--20230630.json',2022, 10,12, 'kws')
+#print(analyse_kw_jour('data/fr.sputniknews.africa--20220630--20230630.json',2022, 10,12, 'kws'))
